@@ -42,6 +42,8 @@ tof1 = VL53L0X.VL53L0X(i2c_bus=1,i2c_address=0x29)
 tof2 = VL53L0X.VL53L0X(i2c_bus=1, i2c_address=0x29)
 tof3 = VL53L0X.VL53L0X(i2c_bus=1, i2c_address=0x29)
 
+# !!!!!!!!!!!! This sequence needs to be ran each time the ToFs are powered on. Address is automatically set to 0x29 upon loss of power.
+
 # Set shutdown pin high for the first VL53L0X
 GPIO.output(sensor1_shutdown, GPIO.HIGH)
 time.sleep(1)
