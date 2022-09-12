@@ -1,0 +1,2 @@
+#Question before writing: Are we just switching on the motor; is there a motor controller? Do we need a PWM for this? 
+#If it is just a relay switch, will we just use simple IO (0/1) to switch or will we utilize a PWM based upon the maximum switch rate for the relay?

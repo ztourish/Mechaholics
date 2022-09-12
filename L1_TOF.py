@@ -8,6 +8,7 @@ import adafruit_vl53l0x
 i2c = busio.I2C(board.SCL, board.SDA)
 vl53 = adafruit_vl53l0x.VL53L0X(i2c)
 
+# Basic code is from template found online, below was a comment included. I am leaving the comment as-is until we can test the sensors. 
 # Optionally adjust the measurement timing budget to change speed and accuracy.
 # See the example here for more details:
 #   https://github.com/pololu/vl53l0x-arduino/blob/master/examples/Single/Single.ino
