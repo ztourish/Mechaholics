@@ -8,7 +8,7 @@ import VL53L0X
 import RPi.GPIO as GPIO
 import os
 import rospy
-import std_msgs.msg import FloatArr #TESTING REQUIRED TO VERIFY FUNCTIONALITY OF IMPORT SINCE FLOATARR IS A CUSTOM MESSAGE TYPE
+from std_msgs.msg import FloatArr #TESTING REQUIRED TO VERIFY FUNCTIONALITY OF IMPORT SINCE FLOATARR IS A CUSTOM MESSAGE TYPE
 # GPIO for Sensor 1 shutdown pin
 sensor1_shutdown = 20
 # GPIO for Sensor 2 shutdown pin
