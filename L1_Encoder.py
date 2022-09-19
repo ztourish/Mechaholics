@@ -6,6 +6,8 @@
 import Adafruit_GPIO.I2C as Adafruit_I2C        # for i2c communication functions
 import time
 import numpy as np                              # for handling arrays
+import rospy
+from std_msgs.msg import FloatArr
 
 encL = Adafruit_I2C.Device(0x40, 1)             # encoder i2c address
 encR = Adafruit_I2C.Device(0x41, 1)             # encoder i2c address
@@ -40,13 +42,22 @@ def read():
     encoders = np.array([encLeft, encRight])    # form array from left and right
     return encoders
 
-
-if __name__ == "__main__":
-    while True:
+def runEncoderPub():
+    pub = rospy.Publisher('Encoder', FloatArr, queue_size=10)
+    rospy.init_node('Encoder_Pub_Node', anonymous=True)
+    rate = rospy.Rate(90) #Rate in Hz currently set for 90 readings per second
+    rospy.loginfo("Encoder Publisher node started, now publishing")    
+    while not rospy.is_shutdown():
         encoders = read()
         encoders = np.round((encoders * (360 / 2**14)), 2)      # scale values to get degrees
-        print("encoders: ", encoders)                           # print the values
-        time.sleep(0.10)
+        msg = FloatArr
+        msg.data = encoders
+        pub.publish(msg)
+        rate.sleep()
 
-
+if __name__ == "__main__":
+    try:
+        runEncoderPub()
+    except rospy.ROSInterruptException:
+        pass
 #PID WILL EITHER UTILIZE PYTHON YIELD STATEMENT OR ROS PUBLISHERS/SUBSCRIBERS

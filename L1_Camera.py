@@ -1,8 +1,14 @@
 # This file retrieves an image from the usb camera.
 #important parameters: 256 pixel length and width (Specified by neural network inputs)
 # Import external libraries
-import cv2
 
+#***********************************************************************
+# THE IMAGE MESSAGE TYPE IN THIS CODE DOES NOT WORK (I think), MUST BE CHANGED
+#***********************************************************************
+import cv2
+from cv_brisge import CvBridge
+import rospy
+from sensor_msgs.msg import Image
 # Initialize important vars
 # width  = 240                      # desired width in pixels
 # height = 160                      # desired height in pixels
@@ -20,8 +26,19 @@ def newImage(size=(width, height)):
     image = cv2.resize(image, size)     # reduce size of image
     return image
 
+def runCameraPub():
+    pub = rospy.Publisher('Camera', Image, queue_size=10)
+    rospy.init_node('Camnera_Pub_Node', anonymous=True)
+    rate = rospy.Rate(1) #Rate in Hz
+    br = CvBridge()
+    rospy.loginfo("Image Publisher node started, now publishing")
+    while not rospy.is_shutdown():
+        msg = newImage()
+        pub.publish(br.cv2_to_imgmsg(msg))
+        rate.sleep()
 
 if __name__ == "__main__":
-    while True:
-        image = newImage()
-        print(image.shape)          # print info about the image (height, width, colorspace)
+    try:
+        runCameraPub()
+    except rospy.ROSInterruptException:
+        pass
