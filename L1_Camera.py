@@ -2,9 +2,6 @@
 #important parameters: 256 pixel length and width (Specified by neural network inputs)
 # Import external libraries
 
-#***********************************************************************
-# THE IMAGE MESSAGE TYPE IN THIS CODE DOES NOT WORK (I think), MUST BE CHANGED
-#***********************************************************************
 import cv2
 from cv_brisge import CvBridge
 import rospy
