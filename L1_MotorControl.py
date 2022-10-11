@@ -9,7 +9,7 @@ global MOTOR_SPEED_MAX
 MOTOR_SPEED_MAX = 5500                      #NEED TO MODIFY BASED UPON REAL MAX RPM*********************************
 #RPi Software PWM Usage: soft_pwm = GPIO.PWM([pin], [freq])
 #Software PWM Parameters: Frequency, Duty Cycle, Channel (pin)
-
+GPIO.setmode(GPIO.BCM)
 tau = 1 #Electrical time constant of the motor
 freq = 5/(2*np.pi*tau)
 soft_PWM_L = GPIO.PWM(12, freq)                 #pin 18, Frequency dependent on motor electrical time constant

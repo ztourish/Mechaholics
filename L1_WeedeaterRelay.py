@@ -20,7 +20,7 @@ def listener():
     rospy.spin()
 
 if __name__ == "__main__":
-    GPIO.setmode(GPIO.BOARD)
+    GPIO.setmode(GPIO.BCM)
     GPIO.setup(18, GPIO.OUT)
     try:
         listener()

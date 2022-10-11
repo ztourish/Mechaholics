@@ -10,7 +10,8 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, Dense, Flatten
 from tensorflow.keras.metrics import Precision, Recall, BinaryAccuracy
-
+from tensorflow.python.ops.numpy_ops import np_config
+np_config.enable_numpy_behavior()
 dataDir = 'data'
 #Remove bad images
 image_extensions = ['jpeg','jpg','bmp','png']
@@ -34,13 +35,15 @@ data_iterator = data.as_numpy_iterator() #Give us access to the dataset's data
 batch = data_iterator.next() #obtain a 'batch' of the dataset (access the data pipeline)
 #An element of 'batch' contains the image represented as an array, with 3 color channels for color images
 fig, ax = plt.subplots(ncols=4, figsize=(20,20))
-for idx, img in enumerate(batch[0][:4]):
-    ax[idx].imshow(img.astype(int))
-    ax[idx].title.set_text(batch[1][idx])
+for i, img in enumerate(batch[0][:4]):
+    ax[i].imshow(img.astype(int))
+    print(img)
+    print(img.astype(int))
+    ax[i].title.set_text(batch[1][i])
 
 #Preprocessing
 #Scaling the colors (0-255 turning to 0-1)
-data = data.map(lambda x, y: (x/255, y))
+data = data.map(lambda x, y: (x.astype(np.uint8), y))
 #Splitting
 train_size = int(len(data)*.7) #70% training
 val_size = int(len(data)*.2) #20% value
@@ -141,7 +144,7 @@ img = cv2.imread('OkraTest.jpg')
 #plt.show()
 resize = tf.image.resize(img,(256,256))
 #Model doesnt expect single images, it expects batches. np.expand_dims encapsulates the image, giving it another dimension and making it look like a batch
-yhat = model.predict(np.expand_dims(resize/255, 0))
+yhat = model.predict(np.expand_dims(resize, 0))
 if(yhat<0.5):
     print('Classification: 0['+str(yhat)+']')
 elif(yhat>0.5):
@@ -152,7 +155,7 @@ img = cv2.imread('NutGrassTest.jpg')
 #plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
 #plt.show()
 resize = tf.image.resize(img,(256,256))
-yhat = model.predict(np.expand_dims(resize/255, 0))
+yhat = model.predict(np.expand_dims(resize, 0))
 if(yhat<0.5):
     print('Classification: 0['+str(yhat)+']')
 elif(yhat>0.5):
@@ -163,13 +166,17 @@ else:
 #SAVE & LOAD
 #This will save the model in the models folder, make sure to check this folder and ensure it was updated properly
 model.save(os.path.join('models', 'BinaryClassificationModel.tflite'))
-
+converter = tf.lite.TFLiteConverter.from_keras_model(model)
+tflite_model = converter.convert()
+with open("model.tflite", 'wb') as f:
+  f.write(tflite_model)
 #Test by loading
 loadModel = load_model(os.path.join('models', 'BinaryClassificationModel.tflite'))
 
 img = cv2.imread('OkraTest.jpg')
 resize = tf.image.resize(img,(256,256))
-yhat = loadModel.predict(np.expand_dims(resize/255, 0))
+resize = resize.astype(np.uint8)
+yhat = loadModel.predict(np.expand_dims(resize, 0))
 if(yhat<0.5):
     print('Classification: 0['+str(yhat)+']')
 elif(yhat>0.5):
@@ -178,7 +185,8 @@ else:
     print('Classification indeterminate (Classified as 0.5)')
 img = cv2.imread('NutGrassTest.jpg')
 resize = tf.image.resize(img,(256,256))
-yhat = loadModel.predict(np.expand_dims(resize/255, 0))
+resize = resize.astype(np.uint8)
+yhat = loadModel.predict(np.expand_dims(resize, 0))
 if(yhat<0.5):
     print('Classification: 0['+str(yhat)+']')
 elif(yhat>0.5):
