@@ -9,8 +9,8 @@ import time
 
 
 # define robot geometry
-R = 0.041                                   # wheel radius
-L = 0.201                                   # half of the wheelbase
+R = 0.018948                                # wheel radius
+L = 0.1                                     # half of the wheelbase
 A = np.array([[1/R, -L/R], [1/R, L/R]])     # matrix A * [xd, td] = [pdl, pdr]
 
 # define constraints for theta and x speeds

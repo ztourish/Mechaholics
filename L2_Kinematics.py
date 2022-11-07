@@ -6,8 +6,8 @@ import numpy as np                          # library for math operations
 import time                                 # library for time access
 
 # define kinematics
-R = 0.041                                   # wheel radius (meters)
-L = 0.201                                   # half of wheelbase (meters)
+R = 0.018948                                # wheel radius
+L = 0.1                                     # half of the wheelbase
 res = (360/2**14)                           # resolution of the encoders (deg)
 roll = int(360/res)                         # variable for rollover logic
 gap = 0.5 * roll                            # degress specified as limit for rollover
