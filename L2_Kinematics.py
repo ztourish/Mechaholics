@@ -6,11 +6,11 @@ import numpy as np                          # library for math operations
 import time                                 # library for time access
 
 # define kinematics
-R = 0.018948                                # wheel radius
-L = 0.1                                     # half of the wheelbase
+R = 0.022                                # wheel radius
+L = 0.110                                     # half of the wheelbase
 res = (360/2**14)                           # resolution of the encoders (deg)
 roll = int(360/res)                         # variable for rollover logic
-gap = 0.5 * roll                            # degress specified as limit for rollover
+gap = 0.5*roll                            # degress specified as limit for rollover
 
 A = np.array([[R/2, R/2], [-R/(2*L), R/(2*L)]])     # This matrix relates [PDL, PDR] to [XD,TD]
 
@@ -19,6 +19,7 @@ wait = 0.02                                 # wait time between encoder measurem
 
 def getTravel(deg0, deg1):                  # calculate the delta on Left wheel
     trav = deg1 - deg0                      # reset the travel reading
+    #print("Travel: ",trav)
     if((-trav) >= gap):                     # if movement is large (has rollover)
         trav = (deg1 - deg0 + roll)         # forward rollover
     if(trav >= gap):
@@ -30,32 +31,44 @@ def getTravel(deg0, deg1):                  # calculate the delta on Left wheel
 # variable so programs can access the previous measurement instantaneously.
 def getPdCurrent():
     global pdCurrents                       # make a global var for easy retrieval
-    encoders = enc.read()                   # grabs the current encoder readings in degrees
-    degL0 = round(encoders[0], 1)           # reading in degrees.
-    degR0 = round(encoders[1], 1)           # reading in degrees.
-    t1 = time.time()                        # time.time() reports in seconds
-    time.sleep(wait)                        # delay specified amount
-    encoders = enc.read()                   # grabs the current encoder readings in degrees
-    degL1 = round(encoders[0], 1)           # reading in degrees.
-    degR1 = round(encoders[1], 1)           # reading in degrees.
-    t2 = time.time()                        # reading about .003 seconds
+    encoders_t1 = enc.readShaftPositions()                   # grabs the current encoder readings in degrees
+    t1 = time.monotonic()                        # time.time() reports in seconds
+    time.sleep(wait)
+    # print("enoders_t1", encoders_t1)                        # delay specified amount
+    encoders_t2 = enc.readShaftPositions()                   # grabs the current encoder readings in degrees
+    t2 = time.monotonic()
+    # print("encoders_t2", encoders_t2)                        # reading about .003 seconds
     global deltaT
     deltaT = round((t2 - t1), 3)            # new scalar dt value
 
     # ---- movement calculations
-    travL = getTravel(degL0, degL1) * res   # grabs travel of left wheel, degrees
-    travL = -1 * travL                      # this wheel is inverted from the right side
-    travR = getTravel(degR0, degR1) * res   # grabs travel of right wheel, degrees
+    travel = np.array(encoders_t2 - encoders_t1)             # this wheel is inverted from the right side
+    travel_b = np.array(travel + 360)
+    travel_c = np.array(travel - 360)
+    mx = np.array([travel, travel_b, travel_c])
+    mx = np.absolute(mx)
+    mins = np.argmin(mx, 0)
+    left = mx[mins[0], 0]
+    right = mx[mins[1], 1]
+    wheelTravel = np.array([left, right])
+    
+    wheelSpeeds_deg = wheelTravel / deltaT
+    pdCurrents = wheelSpeeds_deg * np.pi / 180
+    return (pdCurrents) # Current pdl, pdr in rad/s
 
-    # build an array of wheel speeds in rad/s
-    travs = np.array([travL, travR])        # stores the travel in degrees
-    travs = travs * 0.5                     # pulley ratio = 0.5 wheel turns per pulley turn
-    travs = travs * 3.14 / 180              # convert degrees to radians
-    travs = np.round(travs, decimals=3)     # round the array
-    wheelSpeeds = travs / deltaT
-    wheelSpeeds = np.round(wheelSpeeds, decimals=3)
-    pdCurrents = wheelSpeeds                # store the updated most recent wheel speeds to the class variable
-    return(pdCurrents)                      # returns [pdl, pdr] in radians/second
+def phiTravels(encoders_t1, encoders_t2):   # get travel of wheels [deg, deg] (take no measurements)
+    travel = encoders_t2 - encoders_t1      # compute change in both shaft encoders (degrees)
+    travel = encoders_t2 - encoders_t1      # array, 2x1 to indicate travel
+    trav_b = travel + 360                   # array variant b
+    trav_c = travel - 360                   # array variant c
+    mx = np.stack((travel, trav_b, trav_c)) # combine array variants
+    mx_abs = np.absolute(mx)                # convert to absolute val
+    mins = np.argmin(mx_abs,0)              # find the indices of minimum values (left and right hand)
+    left = mx[mins[0],0]                    # pull corresponding indices from original array
+    right = mx[mins[1],1]                   # pull corresponding index for RH
+    wheelTravel = np.array([left,right])    # combine left and right sides to describe travel (degrees)
+    return(wheelTravel)    
+
 
 
 def getMotion():                            # this function returns the chassis speeds
