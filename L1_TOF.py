@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 # This program relies on pimoroni's VL53L0X drivers for Raspberry Pi, found at:
 # https://github.com/pimoroni/VL53L0X-python
 

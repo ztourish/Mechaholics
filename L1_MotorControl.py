@@ -3,8 +3,7 @@
 import RPi.GPIO as GPIO
 import time                                     # only necessary if running this program as a loop
 import numpy as np                              # for clip function
-# import rospy
-# from std_msgs.msg import FloatArr
+
 #RPi Software PWM Usage: soft_pwm = GPIO.PWM([pin], [freq])
 #Software PWM Parameters: Frequency, Duty Cycle, Channel (pin)
 GPIO.setmode(GPIO.BCM)

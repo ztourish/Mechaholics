@@ -1,15 +1,16 @@
 #Simple I/O for turning on/off relay
 #Pin is 18
 import RPi.GPIO as GPIO
+relay = 18
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(18, GPIO.OUT)
+GPIO.setup(relay, GPIO.OUT)
 
 
 def setRelay(data):
     if data:
-        GPIO.output(18, GPIO.HIGH)
+        GPIO.output(relay, GPIO.HIGH)
     else:
-        GPIO.output(18, GPIO.LOW)
+        GPIO.output(relay, GPIO.LOW)
 
 if __name__ == "__main__":
     while 1:
