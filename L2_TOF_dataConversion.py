@@ -3,7 +3,7 @@ import numpy as np
 import os
 import time as t
 
-
+# min_dist = # enter minimum TOF 
 
 def dist2rowapprox():
     # takes input from the 4 time-of-flight sensors. returns the approx. distance to each row, as well as
@@ -28,14 +28,14 @@ def dist2rowapprox():
     # left_theta = np.arctan(left_trig_height / left_trig_base) # itan(opp/adj) reveals theta. np defaults to radians
     
     # left_theta = np.arctan(np.cos(tof_angle) * (FL - BL) / (tof_spacing + np.sin(tof_angle) * BL * FL))
-    out.append(np.arctan(np.cos(tof_angle) * (FL - BL) / (tof_spacing + np.sin(tof_angle) * BL * FL)))
+    out.append(np.round(np.degrees(np.arctan(np.cos(tof_angle) * (FL - BL) / (tof_spacing + np.sin(tof_angle) * BL * FL))), 2))
 
     # right_trig_base = tof_spacing + np.sin(tof_angle) * BR * FR
     # right_trig_height = np.cos(tof_angle) * (FR - BR)
     # right_theta = np.arctan(right_trig_height / right_trig_base)
     
     # right_theta = np.arctan(np.cos(tof_angle) * (FR - BR) / (tof_spacing + np.sin(tof_angle) * BR * FR))
-    out.append(np.arctan(np.cos(tof_angle) * (FR - BR) / (tof_spacing + np.sin(tof_angle) * BR * FR)))
+    out.append(np.round(np.degrees(np.arctan(np.cos(tof_angle) * (FR - BR) / (tof_spacing + np.sin(tof_angle) * BR * FR))), 2))
 
 
     # Positive value for theta = outward angle.
@@ -59,5 +59,6 @@ if __name__ == "__main__":
         print('Right row distance:', dist2row[1], 'mm.')
         print('Left row angle:', dist2row[2], 'degrees.')
         print('Right row angle:', dist2row[3], 'degrees.')
+        t.sleep(0.5)
     TOF.cleanup()
     print('Exiting')
