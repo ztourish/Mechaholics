@@ -26,103 +26,113 @@ def run(model: str, num_threads: int, enable_edgetpu: bool) -> None:
       base_options=base_options, classification_options=classification_options)
   detector = vision.ImageClassifier.create_from_options(options)
   imgNameList = ['OkraTest.jpg', 'OkraTest2.jpg', 'OkraTest3.jpg', 'NutgrassTest.jpg', 'NutgrassTest2.jpg', 'NutgrassTest3.jpg']
-  for i in range(6):
-    img = cv2.imread(imgNameList[np.random.randint(6)])
-    resize = tf.image.resize(img,(256,256))
-    resize = resize.astype(np.uint8)
-    #print(resize)
-    input_tensor = vision.TensorImage.create_from_array(resize)
-    classification_result = detector.classify(input_tensor)
-    if(classification_result.classifications[0].categories[0].score < 0.0000000001):
-      print("Nutgrass")
-    else:
-      print("Okra")
-    img = cv2.imread(imgNameList[np.random.randint(6)])
-    resize = tf.image.resize(img,(256,256))
-    resize = resize.astype(np.uint8)
-    #print(resize)
-    input_tensor = vision.TensorImage.create_from_array(resize)
-    classification_result = detector.classify(input_tensor)
-    if(classification_result.classifications[0].categories[0].score < 0.0000000001):
-      print("Nutgrass")
-    else:
-      print("Okra")
-    img = cv2.imread(imgNameList[np.random.randint(6)])
-    resize = tf.image.resize(img,(256,256))
-    resize = resize.astype(np.uint8)
-    #print(resize)
-    input_tensor = vision.TensorImage.create_from_array(resize)
-    classification_result = detector.classify(input_tensor)
-    if(classification_result.classifications[0].categories[0].score < 0.0000000001):
-      print("Nutgrass")
-    else:
-      print("Okra")
+#  for i in range(6):
+#    img = cv2.imread(imgNameList[np.random.randint(6)])
+#    resize = tf.image.resize(img,(256,256))
+#    resize = resize.astype(np.uint8)
+#    #print(resize)
+#    input_tensor = vision.TensorImage.create_from_array(resize)
+#    classification_result = detector.classify(input_tensor)
+#    print(classification_result.classifications[0].categories[0].score)
+#    if(classification_result.classifications[0].categories[0].score < 0.5):
+#      print("Nutgrass")
+#    else:
+#      print("Okra")
+#    img = cv2.imread(imgNameList[np.random.randint(6)])
+#    resize = tf.image.resize(img,(256,256))
+#    resize = resize.astype(np.uint8)
+#    #print(resize)
+#    input_tensor = vision.TensorImage.create_from_array(resize)
+#    classification_result = detector.classify(input_tensor)
+#    print(classification_result.classifications[0].categories[0].score)
+#    if(classification_result.classifications[0].categories[0].score < 0.5):
+#      print("Nutgrass")
+#    else:
+#      print("Okra")
+#    img = cv2.imread(imgNameList[np.random.randint(6)])
+#    resize = tf.image.resize(img,(256,256))
+#    resize = resize.astype(np.uint8)
+#    #print(resize)
+#    input_tensor = vision.TensorImage.create_from_array(resize)
+#    classification_result = detector.classify(input_tensor)
+#    print(classification_result.classifications[0].categories[0].score)
+#    if(classification_result.classifications[0].categories[0].score < 0.5):
+#      print("Nutgrass")
+#    else:
+#      print("Okra")
+  print("Okra 1-3")
+  img = cv2.imread('OkraTest.jpg')
+  resize = tf.image.resize(img,(256,256))
+  resize = resize.astype(np.uint8)
+  #print(resize)
+  input_tensor = vision.TensorImage.create_from_array(resize)
+  classification_result = detector.classify(input_tensor)
+  print(classification_result)
+  if(classification_result.classifications[0].categories[0].score < 0.5):
+    print("Nutgrass")
+  else:
+    print("Okra")
 
-#  img = cv2.imread('OkraTest.jpg')
-#  resize = tf.image.resize(img,(256,256))
-#  resize = resize.astype(np.uint8)
-#  #print(resize)
-#  input_tensor = vision.TensorImage.create_from_array(resize)
-#  classification_result = detector.classify(input_tensor)
-#  if(classification_result.classifications[0].categories[0].score < 0.0000000001):
-#    print("Nutgrass")
-#  else:
-#    print("Okra")
+  img = cv2.imread('OkraTest2.jpg')
+  resize = tf.image.resize(img,(256,256))
+  resize = resize.astype(np.uint8)
+  #print(resize)
+  input_tensor = vision.TensorImage.create_from_array(resize)
+  classification_result = detector.classify(input_tensor)
+  print(classification_result)
+  if(classification_result.classifications[0].categories[0].score < 0.5):
+    print("Nutgrass")
+  else:
+    print("Okra")
 
-#  img = cv2.imread('OkraTest2.jpg')
-#  resize = tf.image.resize(img,(256,256))
-#  resize = resize.astype(np.uint8)
-#  #print(resize)
-#  input_tensor = vision.TensorImage.create_from_array(resize)
-#  classification_result = detector.classify(input_tensor)
-#  if(classification_result.classifications[0].categories[0].score < 0.0000000001):
-#    print("Nutgrass")
-#  else:
-#    print("Okra")
-#
-#  img = cv2.imread('OkraTest3.jpg')
-#  resize = tf.image.resize(img,(256,256))
-#  resize = resize.astype(np.uint8)
-#  #print(resize)
-#  input_tensor = vision.TensorImage.create_from_array(resize)
-#  classification_result = detector.classify(input_tensor)
-#  if(classification_result.classifications[0].categories[0].score < 0.0000000001):
-#    print("Nutgrass")
-#  else:
-#    print("Okra")
+  img = cv2.imread('OkraTest3.jpg')
+  resize = tf.image.resize(img,(256,256))
+  resize = resize.astype(np.uint8)
+  #print(resize)
+  input_tensor = vision.TensorImage.create_from_array(resize)
+  classification_result = detector.classify(input_tensor)
+  print(classification_result)
+  if(classification_result.classifications[0].categories[0].score < 0.5):
+    print("Nutgrass")
+  else:
+    print("Okra")
 
-#  img = cv2.imread('NutgrassTest.jpg')
-#  resize = tf.image.resize(img,(256,256))
-#  resize = resize.astype(np.uint8)
-#  #print(resize)
-#  input_tensor = vision.TensorImage.create_from_array(resize)
-#  classification_result = detector.classify(input_tensor)
-#  if(classification_result.classifications[0].categories[0].score < 0.0000000001):
-#    print("Nutgrass")
-#  else:
-#    print("Okra")
-#
-#  img = cv2.imread('NutgrassTest2.jpg')
-#  resize = tf.image.resize(img,(256,256))
-#  resize = resize.astype(np.uint8)
-#  #print(resize)
-#  input_tensor = vision.TensorImage.create_from_array(resize)
-#  classification_result = detector.classify(input_tensor)
-#  if(classification_result.classifications[0].categories[0].score < 0.0000000001):
-#    print("Nutgrass")
-#  else:
-#    print("Okra")
+  print("Nutgrass 1-3")
+  img = cv2.imread('NutgrassTest.jpg')
+  resize = tf.image.resize(img,(256,256))
+  resize = resize.astype(np.uint8)
+  #print(resize)
+  input_tensor = vision.TensorImage.create_from_array(resize)
+  classification_result = detector.classify(input_tensor)
+  print(classification_result)
+  if(classification_result.classifications[0].categories[0].score < 0.5):
+    print("Nutgrass")
+  else:
+    print("Okra")
 
-#  img = cv2.imread('NutgrassTest3.jpg')
-#  resize = tf.image.resize(img,(256,256))
-#  resize = resize.astype(np.uint8)
- # #print(resize)
-#  input_tensor = vision.TensorImage.create_from_array(resize)
-#  classification_result = detector.classify(input_tensor)
-#  if(classification_result.classifications[0].categories[0].score < 0.0000000001):
-#    print("Nutgrass")
-#  else:
-#    print("Okra") 
+  img = cv2.imread('NutgrassTest2.jpg')
+  resize = tf.image.resize(img,(256,256))
+  resize = resize.astype(np.uint8)
+  #print(resize)
+  input_tensor = vision.TensorImage.create_from_array(resize)
+  classification_result = detector.classify(input_tensor)
+  print(classification_result)
+  if(classification_result.classifications[0].categories[0].score < 0.5):
+    print("Nutgrass")
+  else:
+    print("Okra")
+
+  img = cv2.imread('NutgrassTest3.jpg')
+  resize = tf.image.resize(img,(256,256))
+  resize = resize.astype(np.uint8)
+  #print(resize)
+  input_tensor = vision.TensorImage.create_from_array(resize)
+  classification_result = detector.classify(input_tensor)
+  print(classification_result)
+  if(classification_result.classifications[0].categories[0].score < 0.5):
+    print("Nutgrass")
+  else:
+    print("Okra") 
 
 
 def main():

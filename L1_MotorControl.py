@@ -3,64 +3,67 @@
 import RPi.GPIO as GPIO
 import time                                     # only necessary if running this program as a loop
 import numpy as np                              # for clip function
-import rospy
-from std_msgs.msg import FloatArr
-global MOTOR_SPEED_MAX
-MOTOR_SPEED_MAX = 5500                      #NEED TO MODIFY BASED UPON REAL MAX RPM*********************************
+# import rospy
+# from std_msgs.msg import FloatArr
 #RPi Software PWM Usage: soft_pwm = GPIO.PWM([pin], [freq])
 #Software PWM Parameters: Frequency, Duty Cycle, Channel (pin)
 GPIO.setmode(GPIO.BCM)
-tau = 1 #Electrical time constant of the motor
-freq = 5/(2*np.pi*tau)
-soft_PWM_L = GPIO.PWM(12, freq)                 #pin 18, Frequency dependent on motor electrical time constant
-soft_PWM_R = GPIO.PWM(33, freq)
-motor_L_direc = 32 #H-BRIDGE LEFT DIRECTION PIN
-motor_R_direc = 35 #H-BRIDGE RIGHT DIRECTION PIN
-GPIO.setup(motor_L_direc, GPIO.OUT)
-GPIO.setup(motor_R_direc, GPIO.OUT)
-
-def MotorControlStart():
-    soft_PWM_L.start(0)
-    soft_PWM_R.start(0)
+freq = 800
+IN1 = 18
+IN2 = 12
+IN3 = 13
+IN4 = 19
+GPIO.setup(IN1, GPIO.OUT)
+GPIO.setup(IN2, GPIO.OUT)
+GPIO.setup(IN3, GPIO.OUT)
+GPIO.setup(IN4, GPIO.OUT)
+R_fwd = GPIO.PWM(IN1, freq)
+R_bwd = GPIO.PWM(IN2, freq)
+L_fwd = GPIO.PWM(IN3, freq)
+L_bwd = GPIO.PWM(IN4, freq)
+R_fwd.start(0)
+R_bwd.start(0)
+L_fwd.start(0)
+L_bwd.start(0)
 
 # define functions to command motors, effectively controlling PWM
 def MotorL(speed):                              #Speed should be RPM or RAD/S
     if speed < 0:
-        duty = speed2Duty(speed*-1)
-        soft_PWM_L.ChangeDutyCycle(duty)
-        GPIO.output(motor_L_direc, LOW)
+        L_bwd.ChangeDutyCycle(-speed * 100)
+        L_fwd.ChangeDutyCycle(0)
     else:    
-        duty = speed2Duty(speed)
-        soft_PWM_L.ChangeDutyCycle(duty)
-        GPIO.output(motor_L_direc, HIGH)
+        L_fwd.ChangeDutyCycle(speed * 100)
+        L_bwd.ChangeDutyCycle(0)
 
 
 def MotorR(speed):                              #Speed should be RPM or RAD/S
     if speed < 0:
-        duty = speed2Duty(speed*-1)
-        soft_PWM_R.ChangeDutyCycle(duty)
-        GPIO.output(motor_R_direc, LOW)
+        R_bwd.ChangeDutyCycle(-speed * 100)
+        R_fwd.ChangeDutyCycle(0)
     else:
-        duty = speed2Duty(speed)
-        soft_PWM_R.ChangeDutyCycle(duty)
-        GPIO.output(motor_R_direc, HIGH)
-
-def speed2Duty(speed):
-    duty = speed/MOTOR_SPEED_MAX #NEEDS MODIFICATIONS
-    return duty
-
-def callback(data):
-    MotorL(data.data[0])
-    MotorR(data.data[1])
-
-def listener():
-    rospy.init_node('Motor_Control_Subscriber_Node', anonymous = True)
-    rospy.Subscriber('Motor_Speeds', FloatArr, callback) #Three arguments: topic, message type, and callback function
-    rospy.spin()
+        R_fwd.ChangeDutyCycle(speed * 100)
+        R_bwd.ChangeDutyCycle(0)
 
 if __name__ == "__main__":
-    MotorControlStart()
-    try:
-        listener()
-    except rospy.ROSInterruptException:
-        pass
+    while(1):
+        u_in = str(input("Enter F or B for fwd or bwd:"))
+        if u_in == 'F':
+            u_in = int(input("Enter duty cycle (0 - 100), -1 to change pwm frequency (Hz):"))
+        
+            if 0 <= u_in <= 100:
+                R_fwd.ChangeDutyCycle(u_in)
+                L_fwd.ChangeDutyCycle(u_in)
+    
+            else:
+                break
+        elif u_in == 'B':
+            u_in = int(input("Enter duty cycle (0 - 100), -1 to change pwm frequency (Hz):"))
+        
+            if 0 <= u_in <= 100:
+                R_bwd.ChangeDutyCycle(u_in)
+                L_bwd.ChangeDutyCycle(u_in)
+    
+            else:
+                break
+        else:
+            break

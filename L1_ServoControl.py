@@ -1,8 +1,6 @@
 # Import libraries
 import RPi.GPIO as GPIO
 import time
-import rospy
-from std_msgs.msg import Int32
 # Set GPIO numbering mode
 GPIO.setmode(GPIO.BOARD)
 
@@ -24,17 +22,12 @@ def setServoAngle(angle):
 
 # Start PWM running, with value of 0 (pulse off)
 servo1.start(0)
-def callback(data):
-    rospy.loginfo("Received Data: %s", data.data)
-    setServoAngle(data.data)
-
-def listener():
-    rospy.init_node('ServoSubscriber_Node', anonymous = True)
-    rospy.Subscriber('Servo_Angle', Int32, callback) #Three arguments: topic, message type, and callback function
-    rospy.spin()
 
 if __name__ == "__main__":
-    try:
-        listener()
-    except rospy.ROSInterruptException:
-        pass
+    while 1:
+        u_in = int(input("Input servo angle: "))
+        try:
+            setServoAngle(u_in)
+        except:
+            print("incorrect input, exiting")
+            break

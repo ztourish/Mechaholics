@@ -7,8 +7,6 @@ import time
 import VL53L0X
 import RPi.GPIO as GPIO
 import os
-import rospy
-from std_msgs.msg import FloatArr #TESTING REQUIRED TO VERIFY FUNCTIONALITY OF IMPORT SINCE FLOATARR IS A CUSTOM MESSAGE TYPE
 # GPIO for Sensor 1 shutdown pin
 sensor1_shutdown = 20
 # GPIO for Sensor 2 shutdown pin
@@ -67,58 +65,38 @@ GPIO.output(sensor4_shutdown, GPIO.HIGH)
 time.sleep(1)
 # Set new address for the fourth VL53L0X
 tof3.change_address(0x31)
-rospy.loginfo('Initialized ToF Sensors')
+print('Initialized ToF Sensors')
 
 # start ranging
 tof.open()
 time.sleep(0.50)
 tof.start_ranging(VL53L0X.Vl53l0xAccuracyMode.BETTER)
-rospy.loginfo('ToF 0 Ranging Start')
+print('ToF 0 Ranging Start')
 # start ranging
 tof1.open()
 time.sleep(0.50)
 tof1.start_ranging(VL53L0X.Vl53l0xAccuracyMode.BETTER)
-rospy.loginfo('ToF 1 Ranging Start')
+print('ToF 1 Ranging Start')
 # start ranging
 tof2.open()
 time.sleep(0.50)
 tof2.start_ranging(VL53L0X.Vl53l0xAccuracyMode.BETTER)
-rospy.loginfo('ToF 2 Ranging Start')
+print('ToF 2 Ranging Start')
 # start ranging
 tof3.open()
 time.sleep(0.50)
 tof3.start_ranging(VL53L0X.Vl53l0xAccuracyMode.BETTER)
-rospy.loginfo('ToF 3 Ranging Start')
+print('ToF 3 Ranging Start')
+
+timing = tof.get_timing()
+if timing < 20000:
+    timing = 20000
 
 def getRange():
     distance = [tof.get_distance(), tof1.get_distance(), tof2.get_distance(), tof3.get_distance()]
     return distance
 
-if __name__ == "__main__":
-    timing = tof.get_timing()
-    if timing < 20000:
-        timing = 20000
-    rospy.loginfo("TOF Timing %d ms" % (timing/1000))
-
-    pub = rospy.Publisher('TOF', FloatArr, queue_size=10)
-    rospy.init_node('TOF_Node', anonymous=True)
-    rate = rospy.Rate(1/timing)
-    rospy.loginfo("TOF Node started, Publishing")
-
-    count = 0
-    try:
-        while not rospy.is_shutdown():
-            distance = getRange()
-            if distance[0] > 0 and distance[1] > 0 and distance[2] > 0 and distance[3] > 0:
-                tof_data = FloatArr
-                tof_data.data = distance
-                pub.publish(tof_data)
-                rate.sleep()
-            else:
-                rospy.loginfo("TOF Sensor Error - Diagnosis required")
-    except rospy.ROSInterruptException:
-        rospy.loginfo('ROSPYInterruptException')
-        pass
+def cleanup():
     tof3.stop_ranging()
     GPIO.output(sensor4_shutdown, GPIO.LOW)
     tof2.stop_ranging()
@@ -131,3 +109,10 @@ if __name__ == "__main__":
     tof1.close()
     tof2.close()
     tof3.close()
+
+if __name__ == "__main__":
+    timing = tof.get_timing()
+    if timing < 20000:
+        timing = 20000
+    while 1:
+        print(getRange())

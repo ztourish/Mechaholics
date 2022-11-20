@@ -9,12 +9,12 @@ import time
 
 
 # define robot geometry
-R = 0.018948                                # wheel radius
-L = 0.1                                     # half of the wheelbase
+R = 0.018923                                # wheel radius
+L = 0.1075                                     # half of the wheelbase
 A = np.array([[1/R, -L/R], [1/R, L/R]])     # matrix A * [xd, td] = [pdl, pdr]
 
 # define constraints for theta and x speeds
-max_xd = 0.4                                # maximum achievable x_dot (m/s) FW  translation
+max_xd = 0.2                                # maximum achievable x_dot (m/s) FW  translation
 max_td = (max_xd / L)                       # maximum achievable theta_dot (rad/s)
 
 
