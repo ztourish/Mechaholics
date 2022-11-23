@@ -45,6 +45,30 @@ def dist2rowapprox():
     # return left_dist, right_dist, left_theta, right_theta
     return out
 
+i = 0
+mat = np.array([[np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan], 
+                [np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan], 
+                [np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan], 
+                [np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan]])
+def angDist_avg():
+    curr = dist2rowapprox()
+    mat [0][i] = curr[0]
+    mat [1][i] = curr[1]
+    mat [2][i] = curr[2]
+    mat [3][i] = curr[3]
+
+    left_dist_avg = np.nanmean(mat[0])
+    right_dist_avg = np.nanmean(mat[1])
+    left_theta_avg = np.nanmean(mat[2])
+    right_theta_avg = np.nanmean(mat[3])
+    if i >= 7:
+        i = -1
+    avgs = np.array([left_dist_avg, right_dist_avg, left_theta_avg, right_theta_avg])
+    i += 1
+    return avgs
+    
+
+
 
 # maybe, average the data points over a half second or so before performing these calculations? may help
 # smooth these results.
@@ -53,7 +77,7 @@ if __name__ == "__main__":
     u_in = int(input('Enter time to run in seconds:'))
     for i in range(u_in * 10):
         start_time = t.time()
-        dist2row = dist2rowapprox()
+        dist2row = angDist_avg()
         print('----%s seconds to iterate----' % (t.time() - start_time))
         print('Left row distance:', dist2row[0], "mm.")
         print('Right row distance:', dist2row[1], 'mm.')
