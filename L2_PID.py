@@ -41,7 +41,7 @@ def scaleMotorEffort(u):                            # send the control effort si
     u_out[1] = scalingFunction(u[1])
     return(u_out)
 
-def driveClosedLoop(pdt, pdc, de_dt):               # this function runs motors for closed loop PID control
+def driveClosedLoop(pdt, pdc, de_dt=0):               # this function runs motors for closed loop PID control
     global u_integral
     print("PD Target:", pdt)
     print("PD Current:", pdc)
