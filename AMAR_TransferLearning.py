@@ -9,8 +9,8 @@ plant_dir = os.path.join('data') #Directory that contains all images for use wit
 IMAGE_SIZE = 224 #Image size for Mobilenet v2
 BATCH_SIZE = 64
 
-datagen = tf.keras.preprocessing.image.ImageDataGenerator(
-    rescale=1./255, 
+datagen = tf.keras.preprocessing.image.ImageDataGenerator( #Create datagenerator for model trainging and evaluation
+    rescale=1./255, #Rescale image for variables from (0-255) to (0-1) for faster/easier training (less hard math)
     validation_split=0.2)
 
 train_generator = datagen.flow_from_directory( #Generate data for training the model
