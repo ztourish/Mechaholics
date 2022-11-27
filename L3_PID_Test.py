@@ -30,7 +30,7 @@ if __name__ == "__main__":
         timeKeepInitial = time.time()
         #for i in range(200):
         #    pid.driveOpenLoop(pdt)
-        for i in range(500):
+        for i in range(1000):
             #print("PDC Original: ", pdc)
             # print("Current Motion: ", k.getMotion())
             timeKeep = time.time()-timeKeepInitial

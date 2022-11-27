@@ -8,7 +8,7 @@ import numpy as np                              # for clip function
 #RPi Software PWM Usage: soft_pwm = GPIO.PWM([pin], [freq])
 #Software PWM Parameters: Frequency, Duty Cycle, Channel (pin)
 GPIO.setmode(GPIO.BCM)
-freq = 800
+freq = 1000
 IN1 = 18
 IN2 = 12
 IN3 = 13
