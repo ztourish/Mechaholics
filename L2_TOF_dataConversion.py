@@ -3,7 +3,7 @@ import numpy as np
 import os
 import time as t
 
-
+# min_dist = # enter minimum TOF 
 
 def dist2rowapprox():
     # takes input from the 4 time-of-flight sensors. returns the approx. distance to each row, as well as
@@ -28,14 +28,14 @@ def dist2rowapprox():
     # left_theta = np.arctan(left_trig_height / left_trig_base) # itan(opp/adj) reveals theta. np defaults to radians
     
     # left_theta = np.arctan(np.cos(tof_angle) * (FL - BL) / (tof_spacing + np.sin(tof_angle) * BL * FL))
-    out.append(np.arctan(np.cos(tof_angle) * (FL - BL) / (tof_spacing + np.sin(tof_angle) * BL * FL)))
+    out.append(np.round(np.degrees(np.arctan(np.cos(tof_angle) * (FL - BL) / (tof_spacing + np.sin(tof_angle) * BL * FL))), 2))
 
     # right_trig_base = tof_spacing + np.sin(tof_angle) * BR * FR
     # right_trig_height = np.cos(tof_angle) * (FR - BR)
     # right_theta = np.arctan(right_trig_height / right_trig_base)
     
     # right_theta = np.arctan(np.cos(tof_angle) * (FR - BR) / (tof_spacing + np.sin(tof_angle) * BR * FR))
-    out.append(np.arctan(np.cos(tof_angle) * (FR - BR) / (tof_spacing + np.sin(tof_angle) * BR * FR)))
+    out.append(np.round(np.degrees(np.arctan(np.cos(tof_angle) * (FR - BR) / (tof_spacing + np.sin(tof_angle) * BR * FR))), 2))
 
 
     # Positive value for theta = outward angle.
@@ -45,6 +45,30 @@ def dist2rowapprox():
     # return left_dist, right_dist, left_theta, right_theta
     return out
 
+i = 0
+mat = np.array([[np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan], 
+                [np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan], 
+                [np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan], 
+                [np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan]])
+def angDist_avg():
+    curr = dist2rowapprox()
+    mat [0][i] = curr[0]
+    mat [1][i] = curr[1]
+    mat [2][i] = curr[2]
+    mat [3][i] = curr[3]
+
+    left_dist_avg = np.nanmean(mat[0])
+    right_dist_avg = np.nanmean(mat[1])
+    left_theta_avg = np.nanmean(mat[2])
+    right_theta_avg = np.nanmean(mat[3])
+    if i >= 7:
+        i = -1
+    avgs = np.array([left_dist_avg, right_dist_avg, left_theta_avg, right_theta_avg])
+    i += 1
+    return avgs
+    
+
+
 
 # maybe, average the data points over a half second or so before performing these calculations? may help
 # smooth these results.
@@ -53,11 +77,12 @@ if __name__ == "__main__":
     u_in = int(input('Enter time to run in seconds:'))
     for i in range(u_in * 10):
         start_time = t.time()
-        dist2row = dist2rowapprox()
+        dist2row = angDist_avg()
         print('----%s seconds to iterate----' % (t.time() - start_time))
         print('Left row distance:', dist2row[0], "mm.")
         print('Right row distance:', dist2row[1], 'mm.')
         print('Left row angle:', dist2row[2], 'degrees.')
         print('Right row angle:', dist2row[3], 'degrees.')
+        t.sleep(0.5)
     TOF.cleanup()
     print('Exiting')

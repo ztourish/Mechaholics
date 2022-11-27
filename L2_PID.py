@@ -1,6 +1,3 @@
-# speed_control.py takes target speeds and generates duty cycles
-# to send to motors, and has a function to execute PID control.
-
 # Import external libraries
 import numpy as np                                  # for handling arrays
 
@@ -44,7 +41,7 @@ def scaleMotorEffort(u):                            # send the control effort si
     u_out[1] = scalingFunction(u[1])
     return(u_out)
 
-def driveClosedLoop(pdt, pdc, de_dt):               # this function runs motors for closed loop PID control
+def driveClosedLoop(pdt, pdc, de_dt=0):               # this function runs motors for closed loop PID control
     global u_integral
     print("PD Target:", pdt)
     print("PD Current:", pdc)
@@ -55,14 +52,11 @@ def driveClosedLoop(pdt, pdc, de_dt):               # this function runs motors 
     kd = pidGains[2]
 
     # GENERATE COMPONENTS OF THE CONTROL EFFORT, u
-    u_proportional = (e * kp)   
-    # print("u_proportional", u_proportional)                                    # proportional term
+    u_proportional = (e * kp)                                     # proportional term
     try:
-        u_integral += (e * ki) 
-        # print("try u_integral", u_integral)                                     # integral term
+        u_integral += (e * ki)                                    # integral term
     except:
-        u_integral = (e * ki)   
-        # print("Except u_integral", u_integral)                                    # for first iteration, u_integral does not exist
+        u_integral = (e * ki)                                       # for first iteration, u_integral does not exist
 
     u_derivative = (de_dt * kd)                                     # derivative term takes de_dt as an argument
 
