@@ -8,7 +8,7 @@ import L1_MotorControl as m                               # for controlling moto
 u_integral = 0
 phi_max = 9.0
 DRS = 1.0                                           # direct rescaling - for open-loop motor duty
-kp = 0.01                                          # proportional term
+kp = 0.09                                          # proportional term
 ki = 0.01                                           # integral term
 kd = 0                                            # derivative term
 pidGains = np.array([kp, ki, kd])                   # form an array to collect pid gains.
@@ -62,7 +62,7 @@ def driveClosedLoop(pdt, pdc, de_dt=0):               # this function runs motor
 
     # CONDITION THE SIGNAL BEFORE SENDING TO MOTORS
     u = np.round((u_proportional + u_integral + u_derivative), 2)   # must round to ensure driver handling
-    # u = scaleMotorEffort(u)                                         # perform scaling - described above
+    u = scaleMotorEffort(u)                                         # perform scaling - described above
     u[0] = sorted([-1, u[0], 1])[1]                                 # place bounds on the motor commands
     u[1] = sorted([-1, u[1], 1])[1]                                 # within [-1, 1]
 
