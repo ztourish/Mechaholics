@@ -9,10 +9,13 @@ print('Initialized camera.')
 camera.resolution = (1280, 720)
 camera.vflip = True
 
-file_name = "/home/pi/%NAME OF FILEPATH%/img.jpg"
+file_name = "/home/pi/Documents/programs/img.jpg"
 
 def imgTake():
 	camera.capture(file_name)
-	img = cv2.imread(file_name)
-	output = cv2.resize(img, (256, 256))
-	cv2.imwrite(file_name, output)
+
+
+
+if __name__ == "__main__":
+	imgTake()
+	print("Exiting.")

@@ -45,26 +45,28 @@ def dist2rowapprox():
     # return left_dist, right_dist, left_theta, right_theta
     return out
 
-i = 0
-mat = np.array([[np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan], 
-                [np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan], 
-                [np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan], 
-                [np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan]])
+global angDist_iterator
+angDist_iterator = 0
+global angDist_array
+angDist_array = np.array([[np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan], 
+                          [np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan], 
+                          [np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan], 
+                          [np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan]])
 def angDist_avg():
     curr = dist2rowapprox()
-    mat [0][i] = curr[0]
-    mat [1][i] = curr[1]
-    mat [2][i] = curr[2]
-    mat [3][i] = curr[3]
+    angDist_array [0][angDist_iterator] = curr[0]
+    angDist_array [1][angDist_iterator] = curr[1]
+    angDist_array [2][angDist_iterator] = curr[2]
+    angDist_array [3][angDist_iterator] = curr[3]
 
-    left_dist_avg = np.nanmean(mat[0])
-    right_dist_avg = np.nanmean(mat[1])
-    left_theta_avg = np.nanmean(mat[2])
-    right_theta_avg = np.nanmean(mat[3])
-    if i >= 7:
-        i = -1
+    left_dist_avg = np.nanmean(angDist_array[0])
+    right_dist_avg = np.nanmean(angDist_array[1])
+    left_theta_avg = np.nanmean(angDist_array[2])
+    right_theta_avg = np.nanmean(angDist_array[3])
+    if angDist_iterator >= 7:
+        angDist_iterator = -1
     avgs = np.array([left_dist_avg, right_dist_avg, left_theta_avg, right_theta_avg])
-    i += 1
+    angDist_iterator += 1
     return avgs
     
 
