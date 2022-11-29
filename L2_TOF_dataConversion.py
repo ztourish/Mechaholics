@@ -52,7 +52,8 @@ angDist_array = np.array([[np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.na
                           [np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan], 
                           [np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan], 
                           [np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan]])
-def angDist_avg():
+def angDist_avg(iter):
+    angDist_iterator = iter
     curr = dist2rowapprox()
     angDist_array [0][angDist_iterator] = curr[0]
     angDist_array [1][angDist_iterator] = curr[1]
@@ -67,7 +68,7 @@ def angDist_avg():
         angDist_iterator = -1
     avgs = np.array([left_dist_avg, right_dist_avg, left_theta_avg, right_theta_avg])
     angDist_iterator += 1
-    return avgs
+    return avgs, angDist_iterator
     
 
 

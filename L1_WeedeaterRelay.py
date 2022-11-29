@@ -1,7 +1,7 @@
 #Simple I/O for turning on/off relay
 #Pin is 18
 import RPi.GPIO as GPIO
-relay = 18
+relay = 5
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(relay, GPIO.OUT)
 
