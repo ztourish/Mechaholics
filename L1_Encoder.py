@@ -35,3 +35,13 @@ def readShaftPositions():
         angleR = 0
     angles = np.array([angleL, angleR])
     return angles
+
+if __name__ == "__main__":
+    while 1:
+        try:
+            print(readShaftPositions())
+
+        except:
+            print("Exiting")
+            break
+

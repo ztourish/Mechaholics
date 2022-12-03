@@ -28,8 +28,8 @@ def lidar_xy():
 	# and create 2 linear fit lines for the left and right rows of plants. Finally,
 	# we will output the angle and distance to each linear fit line to show the angle
 	# and distance from each plant row.
-
-	# print(xy)
-
-	# DF = pd.DataFrame(xy)
-	# DF.to_csv("lidar_xy.csv")
+if __name__ == "__main__":
+	xy = lidar_xy
+	print(xy)
+	DF = pd.DataFrame(xy)
+	DF.to_csv("lidar_xy.csv")

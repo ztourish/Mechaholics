@@ -113,4 +113,10 @@ if __name__ == "__main__":
     if timing < 20000:
         timing = 20000
     while 1:
-        print(getRange())
+        try:
+            mat = getRange()
+            print('FL:', mat[3], 'FR:', mat[1], '\n\rBL:', mat[0], 'BR:', mat[2])
+            time.sleep(0.5)
+        except KeyboardInterrupt:
+            cleanup()
+            break
