@@ -18,43 +18,50 @@ def dist2rowapprox():
     BL = distance[0]
     BR = distance[2]
     
-    # left_dist = (np.cos(tof_angle) * (BL + FL))/2 # approx. dist of crop row relative to central perpendicular axis of robot. (coming out the side)
-    # right_dist = (np.cos(tof_angle) * (BR + FR))/2
-    out.append((np.cos(tof_angle) * (BL + FL))/2) # approx. dist of crop row relative to central perpendicular axis of robot. (coming out the side)
-    out.append((np.cos(tof_angle) * (BR + FR))/2)
+    left_theta = np.round(np.arctan(np.cos(tof_angle) * (FL - BL) / (tof_spacing + np.sin(tof_angle) * BL * FL)), 2)
 
-    # left_trig_base = tof_spacing + np.sin(tof_angle) * BL * FL # calculating the base of the triangle for trig (adjacent to theta).
-    # left_trig_height = np.cos(tof_angle) * (FL - BL) # calculating the height of the triangle for trig (opposite to theta).
-    # left_theta = np.arctan(left_trig_height / left_trig_base) # itan(opp/adj) reveals theta. np defaults to radians
-    
-    # left_theta = np.arctan(np.cos(tof_angle) * (FL - BL) / (tof_spacing + np.sin(tof_angle) * BL * FL))
-    out.append(np.round(np.degrees(np.arctan(np.cos(tof_angle) * (FL - BL) / (tof_spacing + np.sin(tof_angle) * BL * FL))), 2))
+    if left_theta >= 0: # provides shortest distance to crop row based on left TOF angle
+        left_dist = np.cos(left_theta) * BL
+    else:
+        left_dist = np.cos(abs(left_theta)) * FL
 
-    # right_trig_base = tof_spacing + np.sin(tof_angle) * BR * FR
-    # right_trig_height = np.cos(tof_angle) * (FR - BR)
-    # right_theta = np.arctan(right_trig_height / right_trig_base)
-    
-    # right_theta = np.arctan(np.cos(tof_angle) * (FR - BR) / (tof_spacing + np.sin(tof_angle) * BR * FR))
-    out.append(np.round(np.degrees(np.arctan(np.cos(tof_angle) * (FR - BR) / (tof_spacing + np.sin(tof_angle) * BR * FR))), 2))
+    right_theta = np.round(np.arctan(np.cos(tof_angle) * (FR - BR) / (tof_spacing + np.sin(tof_angle) * BR * FR)), 2)
+    if right_theta >= 0: # provides shortest distance to crop row based on right TOF angle
+        right_dist = np.cos(right_theta) * BR 
+    else:
+        right_dist = np.cos(abs(left_theta)) * FR
 
-
+    out.append(left_dist)
+    out.append(right_dist)
+    out.append(np.degrees(left_theta))
+    out.append(np.degrees(right_theta))
     # Positive value for theta = outward angle.
     # robot --> |_|   / <--crop row ->> positive right_theta
     # robot --> |_|   \ <--crop row ->> negative right_theta
     # Theta is in RADIANS!
-    # return left_dist, right_dist, left_theta, right_theta
-    return out
+    return out # return left_dist, right_dist, left_theta, right_theta
 
-global angDist_iterator
-angDist_iterator = 0
+
 global angDist_array
-angDist_array = np.array([[np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan], 
-                          [np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan], 
-                          [np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan], 
-                          [np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan]])
+angDist_array = np.array([[np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan], 
+                          [np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan], 
+                          [np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan], 
+                          [np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan]])
 def angDist_avg(iter):
     angDist_iterator = iter
     curr = dist2rowapprox()
+    if curr[0] > 1000:
+        curr[0] = np.nan
+        print("left sensor gap.")
+    if curr[1] > 1000:
+        curr[1] = np.nan
+        print("right sensor gap.")
+    if abs(curr[2] > 45):
+        curr[2] = np.nan
+        print('left angle > 60.')
+    if abs(curr[3] > 45):
+        curr[3] = np.nan
+        print('right angle > 60.')
     angDist_array [0][angDist_iterator] = curr[0]
     angDist_array [1][angDist_iterator] = curr[1]
     angDist_array [2][angDist_iterator] = curr[2]
@@ -64,11 +71,17 @@ def angDist_avg(iter):
     right_dist_avg = np.nanmean(angDist_array[1])
     left_theta_avg = np.nanmean(angDist_array[2])
     right_theta_avg = np.nanmean(angDist_array[3])
-    if angDist_iterator >= 7:
+    if np.isnan(np.nanmean(angDist_array)):
+        print("Whole array is NAN!")
+        left_dist_avg = 50
+        right_dist_avg = 50
+        left_theta_avg = 0
+        right_theta_avg = 0
+    if angDist_iterator >= 23:
         angDist_iterator = -1
     avgs = np.array([left_dist_avg, right_dist_avg, left_theta_avg, right_theta_avg])
     angDist_iterator += 1
-    return avgs, angDist_iterator
+    return curr, avgs, angDist_iterator
     
 
 
@@ -80,7 +93,8 @@ if __name__ == "__main__":
     u_in = int(input('Enter time to run in seconds:'))
     for i in range(u_in * 10):
         start_time = t.time()
-        dist2row = angDist_avg()
+        iter = 0
+        dnt_need, dist2row, iter = angDist_avg(iter)
         print('----%s seconds to iterate----' % (t.time() - start_time))
         print('Left row distance:', dist2row[0], "mm.")
         print('Right row distance:', dist2row[1], 'mm.')

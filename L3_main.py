@@ -1,5 +1,6 @@
 import L2_PID as PID
 import L1_Camera as cam
+import L2_ClassifyImage as ml
 import L1_LinearActuation as act
 import L1_WeedeaterRelay as weed
 import multiprocessing
@@ -9,7 +10,7 @@ import multiprocessing
 
 while 1:
     # first, check the machine learning process to see if it has identified a weed.
-   
+    print(ml.getClassification)
     # second, run the sensors to find the angles and distances between the robot and the row.
     # here, we need to implement a check that tells whether or not the robot has reached the end of the row.
     # also, we need to implement collision detection here. This can be done with the LiDAR, and the TOF sensors.
