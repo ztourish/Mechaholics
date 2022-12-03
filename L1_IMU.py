@@ -56,7 +56,7 @@ MPU_Init()
 
 print (" Reading Data of Gyroscope and Accelerometer")
 
-while True:
+def getIMUReadings():
 	
 	#Read Accelerometer raw value
 	acc_x = read_raw_data(ACCEL_XOUT_H)
@@ -76,7 +76,10 @@ while True:
 	Gx = gyro_x/131.0
 	Gy = gyro_y/131.0
 	Gz = gyro_z/131.0
-	
 
-	print ("Gx=%.2f" %Gx, u'\u00b0'+ "/s", "\tGy=%.2f" %Gy, u'\u00b0'+ "/s", "\tGz=%.2f" %Gz, u'\u00b0'+ "/s", "\tAx=%.2f g" %Ax, "\tAy=%.2f g" %Ay, "\tAz=%.2f g" %Az) 	
-	sleep(1)
+	return [Gx, Gy, Gz, Ax, Ay, Az] # returns Gx = forward/backward tilt in deg/s, positive = backwards tilt
+                                    # Gy = left/right tilt in deg/s, positive = left tilt
+                                    # Gz = rotation in deg/s, positive = ccw rotation
+                                    # Ax = force of gravity in left/right direction, positive = right tilt
+                                    # Ay = force of gravity in fwd/bwd direction, positive = fwd tilt
+                                    # Az = force of gravity up/down, positive means the robot isnt flipped over
