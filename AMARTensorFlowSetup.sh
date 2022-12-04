@@ -1,3 +1,4 @@
+pip install opencv-python
 pip install tensorflow
 python3 -m pip install tflite-runtime
 sudo apt-get update
