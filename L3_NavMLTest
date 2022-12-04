@@ -8,12 +8,16 @@ import L2_Kinematics as k
 import L1_MotorControl as m
 import L2_ClassifyImage as ci
 import L1_ServoControl as servo
-
+import L2_WeedWhack as ww
+import time
 import csv
 
 row_count = 0
 iter = 0
 theta_dot = 0
+prev_avg = [np.nan, np.nan]
+turn_track = 2 #0 will be right, 1 will be left, 2 will be no turn
+recent_turn_change = 0
 x_dot = 0.15
 filename = "nav_test.csv"
 header = ['left_dist', 'right_dist', 'left_theta', 'right_theta', 'x_dot', 'theta_dot']
@@ -71,9 +75,49 @@ while 1:
         #if dist2row[1] < 100:
         #    theta_dot = 0.08
         #    x_dot = 0.08
+        #CENTER CORRECTION
+        if prev_avg != np.nan:
+            if prev_avg[0] < dist2row[0] and dist2row[0] > 100 and turn_track == 0:
+                theta_dot = -1 * theta_dot
+                recent_turn_change += 1
+                turn_track == 1
+            elif prev_avg[0] < dist2row[0] and dist2row[1] > 100 and turn_track == 1:
+                theta_dot = -1 * theta_dot
+                recent_turn_change += 1
+                turn_track == 0
+            if recent_turn_change > 3:
+                turn_track = 2
+                recent_turn_change = 0
+                x_dot = 0.1
+                theta_dot = 0
+              
+
+        #PSUDO CODE FOR TURNING WHEN NOTICE WEED:
+        #if classification[0][0] == "ragweed" and classification[0][1] > 75:
+        #    x_dot_temp = 0
+        #    theta_dot_temp = 0.1
+        #    to_convert = [np.round(x_dot_temp, 3), np.round(theta_dot_temp, 3)]
+        #    pdt = ik.convert(to_convert)
+        #    pdc = k.getPdCurrent()
+        #    for i in range(15000):
+        #        pdc = k.getPdCurrent()
+        #        pid.driveClosedLoop(pdt, pdc)
+        #        time.sleep(1)
+        #    ww.engage()
+        #    theta_dot_temp = -0.1
+        #    to_convert = [np.round(x_dot_temp, 3), np.round(theta_dot_temp, 3)]
+        #    pdt = ik.convert(to_convert)
+        #    for i in range(15000):
+        #        pdc = k.getPdCurrent()
+        #        pid.driveClosedLoop(pdt, pdc)
+        #        time.sleep(1)
+
+                
+
         print("left row dist =", dist2row[0], "right row dist =", dist2row[1])
         print("left row theta =", dist2row[2], "right row theta =", dist2row[3])
         print("x_dot =", x_dot, "theta_dot =", theta_dot)
+        prev_avg = [dist2row[0], dist2row[1]]
         data = [dist2row[0], dist2row[1], dist2row[2], dist2row[3], x_dot, theta_dot]
         csvwrite.writerow(data)
         to_convert = [np.round(x_dot, 3), np.round(theta_dot, 3)]
