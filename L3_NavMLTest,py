@@ -78,11 +78,11 @@ while 1:
         #CENTER CORRECTION
         if prev_avg != np.nan:
             if prev_avg[0] < dist2row[0] and dist2row[0] > 100 and turn_track == 0:
-                theta_dot = -1 * theta_dot
+                theta_dot = -1 * (theta_dot - 0.006)
                 recent_turn_change += 1
                 turn_track == 1
             elif prev_avg[0] < dist2row[0] and dist2row[1] > 100 and turn_track == 1:
-                theta_dot = -1 * theta_dot
+                theta_dot = -1 * (theta_dot + 0.006)
                 recent_turn_change += 1
                 turn_track == 0
             if recent_turn_change > 3:
