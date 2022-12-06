@@ -108,6 +108,53 @@ def cleanup():
     tof2.close()
     tof3.close()
 
+def reset(sensor_select):
+    if int(sensor_select) == 0:
+        tof.stop_ranging()
+        tof.close()
+        GPIO.output(sensor1_shutdown, GPIO.LOW)
+        time.sleep(0.25)
+        GPIO.output(sensor1_shutdown, GPIO.HIGH)
+        time.sleep(0.5)
+        tof.change_address(0x2B)
+        tof.open()
+        time.sleep(0.50)
+        tof.start_ranging(VL53L0X.Vl53l0xAccuracyMode.BETTER)
+    if int(sensor_select) == 1:
+        tof1.stop_ranging()
+        tof1.close()
+        GPIO.output(sensor2_shutdown, GPIO.LOW)
+        time.sleep(0.25)
+        GPIO.output(sensor2_shutdown, GPIO.HIGH)
+        time.sleep(0.5)
+        tof1.change_address(0x2D)
+        tof1.open()
+        time.sleep(0.50)
+        tof1.start_ranging(VL53L0X.Vl53l0xAccuracyMode.BETTER)
+    if int(sensor_select) == 2:
+        tof2.stop_ranging()
+        tof2.close()
+        GPIO.output(sensor3_shutdown, GPIO.LOW)
+        time.sleep(0.25)
+        GPIO.output(sensor3_shutdown, GPIO.HIGH)
+        time.sleep(0.5)
+        tof2.change_address(0x2F)
+        tof2.open()
+        time.sleep(0.50)
+        tof2.start_ranging(VL53L0X.Vl53l0xAccuracyMode.BETTER)
+    if int(sensor_select) == 3:
+        tof3.stop_ranging()
+        tof3.close()
+        GPIO.output(sensor4_shutdown, GPIO.LOW)
+        time.sleep(0.25)
+        GPIO.output(sensor4_shutdown, GPIO.HIGH)
+        time.sleep(0.5)
+        tof3.change_address(0x31)
+        tof3.open()
+        time.sleep(0.50)
+        tof3.start_ranging(VL53L0X.Vl53l0xAccuracyMode.BETTER)
+#2D 2F 31
+
 if __name__ == "__main__":
     timing = tof.get_timing()
     if timing < 20000:
