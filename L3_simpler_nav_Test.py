@@ -34,13 +34,14 @@ while 1:
             print("Imminent crash detected!")
             if closest_L_obstacle > abs(closest_R_obstacle):
                 x_dot = -0.05
-                theta_dot = -0.15
+                theta_dot = 0.2
             elif closest_L_obstacle < abs(closest_R_obstacle):
                 x_dot = -0.05
-                theta_dot = 0.15
+                theta_dot = -0.2
         elif (closest_L_obstacle < 0.6) and (closest_R_obstacle > -0.6): # Checking if both rows are present in scan
             print("Both rows present, ", end='')
             singlerow_distance = 0 # resetting singlerow distance when both rows are present again
+            no_row_timer = 0 # resetting no_row_timer if no row was detected on previous iteration
             if -0.05 <= (closest_L_obstacle + closest_R_obstacle) <= 0.05: # if the distance between the rows is in an acceptable tolerance
                 print("driving straight.")
                 x_dot = 0.12
@@ -55,6 +56,7 @@ while 1:
                 theta_dot = -0.1
         elif (closest_L_obstacle > 0.6) and (closest_R_obstacle > -0.6): # If the left row is no longer scannable, follows right row
             print("Left row missing. Following right row.")
+            no_row_timer = 0 # resetting no_row_timer if no row was detected on previous iteration
             if (singlerow_distance == 0) or (singlerow_indicator != 'R'): # setting singlerow distance and indicator for left row following
                 singlerow_distance = closest_R_obstacle
                 singlerow_indicator = 'R'
@@ -68,6 +70,7 @@ while 1:
                 x_dot = 0.12
                 theta_dot = 0
         elif (closest_L_obstacle < 0.6) and (closest_R_obstacle < -0.6): # If the right row is no longer scannable, do this 
+            no_row_timer = 0 # resetting no_row_timer if no row was detected on previous iteration
             print("Right row missing. Following left row.")
             if (singlerow_distance == 0) or (singlerow_indicator != 'L'): # setting singlerow distanace and indicator for right row following
                 singlerow_distance = closest_L_obstacle
@@ -99,7 +102,7 @@ while 1:
 
                         if abs(closest_R_obstacle) > turn_distance_from_row:
                             x_dot = 0
-                            theta_dot = -0.2
+                            theta_dot = -0.3
                         elif abs(closest_R_obstacle) < turn_distance_from_row:
                             x_dot = 0.08
                             theta_dot = 0
@@ -134,6 +137,5 @@ while 1:
         m.MotorL(0)
         m.MotorR(0)
         L1tof.cleanup()
-        
         print('Exiting on Keyboard Interrupt.')
         break
