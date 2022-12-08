@@ -9,10 +9,14 @@ def dist2rowapprox():
     # takes input from the 4 time-of-flight sensors. returns the approx. distance to each row, as well as
     # the angle of each row relative to the current orientation.
     distance = TOF.getRange()
+
     tof_spacing = 190 # Enter the space between the laser on each ToF sensor here in mm.
     tof_angle = np.radians(0) # Enter the rotational angle of the 4 ToF sensors here. Try to keep all angles identical.
                               # Perpendicular to driving direction = 0 deg.
-    out = []   
+    out = []
+    for i in range(len(distance)):
+        if distance[i] == -1:
+            TOF.reset(i)
     FL = distance[3]
     FR = distance[1]
     BL = distance[0]
@@ -52,16 +56,16 @@ def angDist_avg(iter):
     curr = dist2rowapprox()
     if curr[0] > 1000:
         curr[0] = np.nan
-        print("left sensor gap.")
+        #print("left sensor gap.")
     if curr[1] > 1000:
         curr[1] = np.nan
-        print("right sensor gap.")
+        #print("right sensor gap.")
     if abs(curr[2] > 45):
         curr[2] = np.nan
-        print('left angle > 60.')
+        #print('left angle > 60.')
     if abs(curr[3] > 45):
         curr[3] = np.nan
-        print('right angle > 60.')
+        #print('right angle > 60.')
     angDist_array [0][angDist_iterator] = curr[0]
     angDist_array [1][angDist_iterator] = curr[1]
     angDist_array [2][angDist_iterator] = curr[2]
@@ -72,7 +76,7 @@ def angDist_avg(iter):
     left_theta_avg = np.nanmean(angDist_array[2])
     right_theta_avg = np.nanmean(angDist_array[3])
     if np.isnan(np.nanmean(angDist_array)):
-        print("Whole array is NAN!")
+        # print("Whole array is NAN!")
         left_dist_avg = 50
         right_dist_avg = 50
         left_theta_avg = 0

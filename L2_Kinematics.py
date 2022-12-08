@@ -34,10 +34,8 @@ def getPdCurrent():
     encoders_t1 = enc.readShaftPositions()                   # grabs the current encoder readings in degrees
     t1 = time.monotonic()                        # time.time() reports in seconds
     time.sleep(wait)
-    # print("enoders_t1", encoders_t1)                        # delay specified amount
     encoders_t2 = enc.readShaftPositions()                   # grabs the current encoder readings in degrees
     t2 = time.monotonic()
-    # print("encoders_t2", encoders_t2)                        # reading about .003 seconds
     global deltaT
     deltaT = round((t2 - t1), 3)            # new scalar dt value
 

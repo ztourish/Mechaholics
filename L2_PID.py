@@ -43,8 +43,6 @@ def scaleMotorEffort(u):                            # send the control effort si
 
 def driveClosedLoop(pdt, pdc, de_dt=0):               # this function runs motors for closed loop PID control
     global u_integral
-    # print("PD Target:", pdt)
-    # print("PD Current:", pdc)
     e = (pdt - pdc)                                 # compute error
 
     kp = pidGains[0]                                # gains are input as constants, above
@@ -69,5 +67,4 @@ def driveClosedLoop(pdt, pdc, de_dt=0):               # this function runs motor
     # SEND SIGNAL TO MOTORS
     m.MotorL(round(u[0], 2))                                        # must round to ensure driver handling!
     m.MotorR(round(u[1], 2))
-    # print("PID Motor Signal", u)                                        # must round to ensure driver handling!
     return
